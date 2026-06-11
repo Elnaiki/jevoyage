@@ -1,0 +1,35 @@
+{
+  "name": "JeVoyage - Bus Travel",
+  "short_name": "JeVoyage",
+  "description": "Visualisez les voyages des agences de bus au Cameroun",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8FAFC",
+  "theme_color": "#1C3A5A",
+  "orientation": "portrait",
+  "scope": "/",
+  "categories": ["travel", "transport"],
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
+}
