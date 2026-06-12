@@ -5,13 +5,12 @@ import { Bus, Eye, EyeOff } from 'lucide-react';
 
 export default function Signup() {
   const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signUp, signIn } = useAuth();
+  const { signUp } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -22,11 +21,6 @@ export default function Signup() {
     try {
       if (!fullName.trim()) {
         setError('Nom complet requis');
-        setLoading(false);
-        return;
-      }
-      if (!phone.trim()) {
-        setError('Téléphone requis');
         setLoading(false);
         return;
       }
@@ -41,17 +35,9 @@ export default function Signup() {
         return;
       }
 
-      const { error: err } = await signUp(phone, password, fullName);
+      const { error: err } = await signUp(password, fullName);
       if (err) {
         setError(err);
-        setLoading(false);
-        return;
-      }
-
-      // Auto-login après inscription
-      const { error: loginErr } = await signIn(phone, password);
-      if (loginErr) {
-        setError(loginErr);
         setLoading(false);
         return;
       }
@@ -80,16 +66,6 @@ export default function Signup() {
               placeholder="Nom complet"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="w-full bg-transparent outline-none font-semibold text-slate-800 placeholder:text-slate-400"
-            />
-          </div>
-
-          <div className="bg-white border border-slate-200 rounded-2xl px-4 py-3.5 flex items-center gap-3">
-            <input
-              type="tel"
-              placeholder="+237 6xx xxx xxx"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
               className="w-full bg-transparent outline-none font-semibold text-slate-800 placeholder:text-slate-400"
             />
           </div>

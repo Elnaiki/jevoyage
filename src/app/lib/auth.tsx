@@ -8,7 +8,7 @@ interface AuthContextType {
   profile: Profile | null;
   session: Session | null;
   loading: boolean;
-  signUp: (phone: string, password: string, fullName: string) => Promise<{ error: string | null }>;
+  signUp: (password: string, fullName: string) => Promise<{ error: string | null }>;
   signIn: (identifier: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
@@ -48,9 +48,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (phone: string, password: string, fullName: string) => {
+  const signUp = async (password: string, fullName: string) => {
+    // Générer un email unique pour Supabase
+    const uniqueId = Date.now() + Math.random().toString(36).substring(7);
+    const email = `user_${uniqueId}@jevoyage.local`;
+    
     const { error } = await supabase.auth.signUp({
-      phone,
+      email,
       password,
       options: { data: { full_name: fullName } },
     });
@@ -58,11 +62,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error: null };
   };
 
-  const signIn = async (identifier: string, password: string) => {
-    const credentials = identifier.includes('@')
-      ? { email: identifier, password }
-      : { phone: identifier, password };
-    const { error } = await supabase.auth.signInWithPassword(credentials);
+  const signIn = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) return { error: error.message };
     return { error: null };
   };
