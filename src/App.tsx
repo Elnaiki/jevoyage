@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './app/lib/auth';
 import BottomNav from './app/components/BottomNav';
 import Auth from './app/pages/Auth';
+import Login from './app/pages/Login';
+import Signup from './app/pages/Signup';
 import Home from './app/pages/Home';
 import TripDetail from './app/pages/TripDetail';
 import History from './app/pages/History';
@@ -73,6 +75,8 @@ export default function App() {
               <InstallBanner />
               <Routes>
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
                 <Route path="/" element={<Home />} />
                 <Route path="/trip/:id" element={<TripDetail />} />
                 <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
