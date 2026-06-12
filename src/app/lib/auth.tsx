@@ -9,7 +9,7 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   signUp: (password: string, fullName: string) => Promise<{ error: string | null }>;
-  signIn: (identifier: string, password: string) => Promise<{ error: string | null }>;
+  signIn: (fullName: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -62,8 +62,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error: null };
   };
 
-  const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const signIn = async (fullName: string, password: string) => {
+    // Chercher le profil par full_name pour obtenir l'email
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('email')
+      .eq('full_name', fullName)
+      .maybeSingle();
+    
+    if (profileError || !profile) {
+      return { error: 'Utilisateur non trouvé' };
+    }
+
+    // Se connecter avec l'email stocké
+    const { error } = await supabase.auth.signInWithPassword({
+      email: profile.email,
+      password,
+    });
+    
     if (error) return { error: error.message };
     return { error: null };
   };

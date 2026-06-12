@@ -56,6 +56,7 @@ export interface TripRating {
 export interface Profile {
   id: string;
   full_name: string;
-  phone: string;
-  avatar_url: string;
+  email: string;
+  phone?: string;
+  avatar_url?: string;
 }

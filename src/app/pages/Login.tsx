@@ -4,7 +4,7 @@ import { useAuth } from '../lib/auth';
 import { Bus, Eye, EyeOff } from 'lucide-react';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
+  const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState('');
@@ -18,8 +18,8 @@ export default function Login() {
     setLoading(true);
 
     try {
-      if (!email.trim()) {
-        setError('Email requis');
+      if (!fullName.trim()) {
+        setError('Nom complet requis');
         setLoading(false);
         return;
       }
@@ -29,7 +29,7 @@ export default function Login() {
         return;
       }
 
-      const { error: err } = await signIn(email, password);
+      const { error: err } = await signIn(fullName, password);
       if (err) {
         setError(err);
         setLoading(false);
@@ -55,10 +55,10 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="bg-white border border-slate-200 rounded-2xl px-4 py-3.5 flex items-center gap-3">
             <input
-              type="email"
-              placeholder="Entrer votre email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              placeholder="Nom complet"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
               className="w-full bg-transparent outline-none font-semibold text-slate-800 placeholder:text-slate-400"
             />
           </div>
