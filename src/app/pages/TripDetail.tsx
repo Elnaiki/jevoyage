@@ -106,7 +106,7 @@ export default function TripDetail() {
         </button>
       </header>
 
-      <div className="mx-4 mt-4 bg-white rounded-2xl p-5 border-l-[5px] border-l-teal-400 shadow-sm">
+      <div className="mx-4 mt-4 bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
         <div className="flex justify-between items-start mb-1">
           <div>
             <div className="text-base font-extrabold text-slate-800">{trip.agency?.name}</div>

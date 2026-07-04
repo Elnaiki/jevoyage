@@ -14,13 +14,6 @@ const busTypeColors: Record<string, string> = {
   NIGHT: 'bg-indigo-50 text-indigo-700 border-indigo-200',
 };
 
-const borderColors: Record<string, string> = {
-  CLASSIC: 'border-l-teal-400',
-  VIP: 'border-l-sky-500',
-  PRESTIGE: 'border-l-amber-500',
-  NIGHT: 'border-l-indigo-500',
-};
-
 function formatTime(iso: string) {
   return new Date(iso).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 }
@@ -43,7 +36,7 @@ export default function TripCard({ trip, onLike }: Props) {
 
   return (
     <div
-      className={`bg-white mx-4 mb-3 rounded-2xl p-5 border-l-[5px] ${borderColors[trip.bus_type] || 'border-l-teal-400'} shadow-sm transition-all hover:shadow-md cursor-pointer active:scale-[0.99]`}
+      className="bg-white mx-4 mb-3 rounded-2xl p-5 border border-slate-100 shadow-sm transition-all hover:shadow-md cursor-pointer active:scale-[0.99]"
       onClick={() => navigate(`/trip/${trip.id}`)}
     >
       <div className="flex justify-between items-start mb-3">

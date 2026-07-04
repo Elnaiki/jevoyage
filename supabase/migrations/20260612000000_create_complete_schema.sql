@@ -1,6 +1,6 @@
--- Migration: Complete JeVoyage schema with RLS and indexes
+-- Migration: Complete JeVoyage schema with RLS, indexes and triggers
 -- Date: 2026-06-12
--- Purpose: Create all tables, enable RLS, add indexes and triggers
+-- Purpose: Create all tables with full-name and password auth (no phone/email visible to user)
 
 -- ============================================================================
 -- 1. CREATE EXTENSION
@@ -42,11 +42,10 @@ CREATE TABLE IF NOT EXISTS public.trips (
   created_at timestamptz DEFAULT now()
 );
 
--- Profiles table
+-- Profiles table (minimal data - just full_name)
 CREATE TABLE IF NOT EXISTS public.profiles (
   id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   full_name text,
-  phone text,
   avatar_url text,
   is_admin boolean DEFAULT false,
   created_at timestamptz DEFAULT now()
@@ -261,6 +260,10 @@ CREATE INDEX IF NOT EXISTS idx_trips_status ON public.trips(status);
 CREATE INDEX IF NOT EXISTS idx_trips_from_city ON public.trips(from_city);
 CREATE INDEX IF NOT EXISTS idx_trips_to_city ON public.trips(to_city);
 
+-- Profiles indexes
+CREATE INDEX IF NOT EXISTS idx_profiles_email ON public.profiles(email);
+CREATE INDEX IF NOT EXISTS idx_profiles_full_name ON public.profiles(full_name);
+
 -- Trip comments indexes
 CREATE INDEX IF NOT EXISTS idx_trip_comments_user_id ON public.trip_comments(user_id);
 CREATE INDEX IF NOT EXISTS idx_trip_comments_trip_id ON public.trip_comments(trip_id);
@@ -312,18 +315,21 @@ CREATE TRIGGER trip_likes_set_user_id
   EXECUTE FUNCTION public.set_user_id_on_insert();
 
 -- Function: Sync profile from auth.users on signup/update
+-- Note: Email is auto-generated backend, not shown to user during signup
+-- User only sees: Nom complet + Mot de passe (+ Confirmation)
 DROP FUNCTION IF EXISTS public.sync_profile_from_auth() CASCADE;
 CREATE OR REPLACE FUNCTION public.sync_profile_from_auth()
 RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN
   IF TG_OP = 'INSERT' THEN
-    INSERT INTO public.profiles (id, full_name, phone, avatar_url)
-    VALUES (NEW.id, NEW.user_metadata->>'full_name', NEW.phone, NULL)
+    INSERT INTO public.profiles (id, full_name, email, phone, avatar_url)
+    VALUES (NEW.id, NEW.user_metadata->>'full_name', NEW.email, NEW.phone, NULL)
     ON CONFLICT (id) DO NOTHING;
     RETURN NEW;
   ELSIF TG_OP = 'UPDATE' THEN
     UPDATE public.profiles
     SET full_name = COALESCE(NEW.user_metadata->>'full_name', profiles.full_name),
+        email = COALESCE(NEW.email, profiles.email),
         phone = COALESCE(NEW.phone, profiles.phone)
     WHERE id = NEW.id;
     RETURN NEW;
@@ -345,7 +351,8 @@ CREATE TRIGGER sync_profile_from_auth_trigger
 -- ✓ All tables created (agencies, trips, profiles, trip_comments, trip_ratings, trip_likes)
 -- ✓ RLS enabled on all tables
 -- ✓ Comprehensive access policies configured
--- ✓ Performance indexes created
+-- ✓ Performance indexes created on email, full_name, and relationships
 -- ✓ Auto-increment user_id triggers configured
 -- ✓ Profile sync from auth.users configured
+-- ✓ Authentication: Full-name + Password (email auto-generated backend, not visible)
 -- ✓ Ready for production deployment

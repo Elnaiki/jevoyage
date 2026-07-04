@@ -8,8 +8,8 @@ interface AuthContextType {
   profile: Profile | null;
   session: Session | null;
   loading: boolean;
-  signUp: (password: string, fullName: string) => Promise<{ error: string | null }>;
-  signIn: (fullName: string, password: string) => Promise<{ error: string | null }>;
+  signUp: (phone: string, password: string, fullName: string) => Promise<{ error: string | null }>;
+  signIn: (phone: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -48,38 +48,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (password: string, fullName: string) => {
-    // Générer un email unique pour Supabase
+  const signUp = async (phone: string, password: string, fullName: string) => {
+    const cleanPhone = phone.trim();
     const uniqueId = Date.now() + Math.random().toString(36).substring(7);
-    const email = `user_${uniqueId}@jevoyage.local`;
-    
+    const email = `user_${uniqueId}@jevoyage.app`;
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName } },
+      options: { data: { full_name: fullName, phone: cleanPhone } },
     });
     if (error) return { error: error.message };
     return { error: null };
   };
 
-  const signIn = async (fullName: string, password: string) => {
-    // Chercher le profil par full_name pour obtenir l'email
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('email')
-      .eq('full_name', fullName)
-      .maybeSingle();
-    
-    if (profileError || !profile) {
+  const signIn = async (phone: string, password: string) => {
+    const cleanPhone = phone.trim();
+
+    // Récupère l'email via la fonction RPC sécurisée (pas de lecture directe de la table profiles)
+    const { data: email, error: rpcError } = await supabase
+      .rpc('get_email_by_phone', { p_phone: cleanPhone });
+
+    if (rpcError || !email) {
       return { error: 'Utilisateur non trouvé' };
     }
 
-    // Se connecter avec l'email stocké
     const { error } = await supabase.auth.signInWithPassword({
-      email: profile.email,
+      email,
       password,
     });
-    
+
     if (error) return { error: error.message };
     return { error: null };
   };

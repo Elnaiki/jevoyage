@@ -5,6 +5,7 @@ import { Bus, Eye, EyeOff } from 'lucide-react';
 
 export default function Signup() {
   const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
@@ -24,6 +25,11 @@ export default function Signup() {
         setLoading(false);
         return;
       }
+      if (!phone.trim()) {
+        setError('Numéro de téléphone requis');
+        setLoading(false);
+        return;
+      }
       if (!password.trim()) {
         setError('Mot de passe requis');
         setLoading(false);
@@ -35,7 +41,7 @@ export default function Signup() {
         return;
       }
 
-      const { error: err } = await signUp(password, fullName);
+      const { error: err } = await signUp(phone, password, fullName);
       if (err) {
         setError(err);
         setLoading(false);
@@ -66,6 +72,16 @@ export default function Signup() {
               placeholder="Nom complet"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
+              className="w-full bg-transparent outline-none font-semibold text-slate-800 placeholder:text-slate-400"
+            />
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-2xl px-4 py-3.5 flex items-center gap-3">
+            <input
+              type="tel"
+              placeholder="Numéro de téléphone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
               className="w-full bg-transparent outline-none font-semibold text-slate-800 placeholder:text-slate-400"
             />
           </div>

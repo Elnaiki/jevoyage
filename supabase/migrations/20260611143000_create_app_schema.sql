@@ -1,3 +1,0 @@
--- DEPRECATED: This migration has been replaced by 20260612000000_enhance_schema_and_policies.sql
--- This file is kept for version control history only.
--- DO NOT EXECUTE - use the consolidated migration instead.
