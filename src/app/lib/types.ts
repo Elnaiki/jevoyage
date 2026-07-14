@@ -4,8 +4,10 @@ export interface Agency {
   location: string;
   city: string;
   logo_url: string;
+  bus_image_url: string;
   phone: string;
   description: string;
+  created_at?: string;
 }
 
 export interface Trip {
@@ -27,6 +29,8 @@ export interface Trip {
   comment_count?: number;
   avg_rating?: number;
   user_liked?: boolean;
+  amenities?: string[] | null;
+  cancellation_policy?: string | null;
 }
 
 export interface TripLike {

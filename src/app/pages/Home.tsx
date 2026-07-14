@@ -1,6 +1,6 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Bus } from 'lucide-react';
+import { Search, Bus, Building2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../lib/auth';
 import TripCard from '../components/TripCard';
@@ -59,6 +59,7 @@ export default function Home() {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedAgency, setSelectedAgency] = useState('all');
   const [loading, setLoading] = useState(true);
 
   const fetchTrips = useCallback(async () => {
@@ -111,7 +112,21 @@ export default function Home() {
     fetchTrips();
   }, [user, navigate, fetchTrips]);
 
+  // Liste des agences distinctes présentes dans les voyages chargés, triée alphabétiquement
+  const agencyOptions = useMemo(() => {
+    const map = new Map<string, string>();
+    trips.forEach((t) => {
+      if (t.agency_id && t.agency?.name) map.set(t.agency_id, t.agency.name);
+    });
+    return Array.from(map.entries())
+      .map(([id, name]) => ({ id, name }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [trips]);
+
   let filtered = filterTrips(trips, activeFilter);
+  if (selectedAgency !== 'all') {
+    filtered = filtered.filter((t) => t.agency_id === selectedAgency);
+  }
   if (searchQuery.trim()) {
     const q = searchQuery.toLowerCase();
     filtered = filtered.filter(
@@ -144,8 +159,8 @@ export default function Home() {
         </button>
       </header>
 
-      <div className="bg-white px-4 pb-3">
-        <div className="relative">
+      <div className="bg-white px-4 pb-3 flex gap-2">
+        <div className="relative flex-1">
           <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
@@ -154,6 +169,21 @@ export default function Home() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-slate-100 rounded-xl pl-10 pr-4 py-2.5 text-sm font-semibold text-slate-800 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-teal-300 transition-all"
           />
+        </div>
+
+        {/* Filtre par agence */}
+        <div className="relative shrink-0">
+          <Building2 size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+          <select
+            value={selectedAgency}
+            onChange={(e) => setSelectedAgency(e.target.value)}
+            className="appearance-none bg-slate-100 rounded-xl pl-8 pr-7 py-2.5 text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-teal-300 transition-all max-w-[140px]"
+          >
+            <option value="all">Toutes agences</option>
+            {agencyOptions.map((a) => (
+              <option key={a.id} value={a.id}>{a.name}</option>
+            ))}
+          </select>
         </div>
       </div>
 
