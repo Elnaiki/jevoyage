@@ -18,11 +18,11 @@ export default function Profile() {
 
   const initials = profile?.full_name?.split(' ').map(n => n[0]).join('').toUpperCase() || user.email?.[0].toUpperCase() || '?';
   const menuItems = [
-    { icon: User, label: 'Informations personnelles', href: '#' },
+    { icon: User, label: 'Informations personnelles', href: '/personal-info' },
     { icon: FileText, label: 'Mes notations', href: '/history' },
-    { icon: Bell, label: 'Notifications', href: '#' },
-    { icon: Shield, label: 'Sécurité', href: '#' },
-    { icon: Globe, label: 'Langue', href: '#', value: 'Français' },
+    { icon: Bell, label: 'Notifications', href: '/notifications' },
+    { icon: Shield, label: 'Sécurité', href: '/security' },
+    { icon: Globe, label: 'Langue', href: '/language', value: 'Français' },
   ];
 
   return (

@@ -9,6 +9,11 @@ import TripDetail from './app/pages/TripDetail';
 import History from './app/pages/History';
 import Profile from './app/pages/Profile';
 import Admin from './admin/Admin';
+import PersonalInfo from './app/pages/PersonalInfo';
+import Notifications from './app/pages/Notifications';
+import Security from './app/pages/Security';
+import Language from './app/pages/Language';
+import ChangePassword from './app/pages/ChangePassword';
 import { useState, useEffect } from 'react';
 import { Download, X } from 'lucide-react';
 
@@ -81,7 +86,12 @@ export default function App() {
                 <Route path="/trip/:id" element={<TripDetail />} />
                 <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                <Route path="*" element={<Navigate to="/" replace />} />
+                <Route path="/personal-info" element={<ProtectedRoute><PersonalInfo /></ProtectedRoute>} />
+                <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+                <Route path="/security" element={ <ProtectedRoute><Security /></ProtectedRoute>}/>
+                <Route path="/language" element={ <ProtectedRoute><Language /></ProtectedRoute>}/>
+                <Route path="/change-password" element={ <ProtectedRoute><ChangePassword /></ProtectedRoute>}/>
+   <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
               <BottomNav />
             </div>
@@ -91,3 +101,13 @@ export default function App() {
     </AuthProvider>
   );
 }
+
+    
+  
+
+
+
+
+
+
+               

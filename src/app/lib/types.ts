@@ -63,4 +63,8 @@ export interface Profile {
   email: string;
   phone?: string;
   avatar_url?: string;
+  notify_booking: boolean;
+  notify_trip_reminder: boolean;
+  notify_email: boolean;
+  notify_sms: boolean;
 }
