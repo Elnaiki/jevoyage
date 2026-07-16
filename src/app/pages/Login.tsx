@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
-import { Bus, Eye, EyeOff } from 'lucide-react';
+import { Bus, Eye, EyeOff, Facebook } from 'lucide-react';
 
 export default function Login() {
   const [phone, setPhone] = useState('');
@@ -9,7 +9,7 @@ export default function Login() {
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signIn } = useAuth();
+  const { signIn, signInWithFacebook } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -93,7 +93,25 @@ export default function Login() {
           >
             {loading ? 'Chargement...' : 'Se connecter'}
           </button>
+
+          <button
+            type="button"
+            onClick={async () => {
+              const { error } = await signInWithFacebook();
+              if (error) setError(error);
+            }}
+            className="w-full bg-blue-600 text-white py-4 rounded-2xl font-extrabold text-base hover:bg-blue-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+          >
+            <Facebook size={20} />
+            Continuer avec Facebook
+          </button>
         </form>
+
+        <div className="flex justify-between mt-4">
+          <Link to="/forgot-password" className="text-sm text-teal-600 font-bold hover:text-teal-700">
+            Mot de passe oublié ?
+          </Link>
+        </div>
 
         <p className="text-center text-slate-600 mt-6">
           Pas encore inscrit ?{' '}
