@@ -29,10 +29,11 @@ export default function ResetPassword() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/reset-password', {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/reset-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
         },
         body: JSON.stringify({ 
           phone: phone,

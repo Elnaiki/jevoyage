@@ -25,10 +25,11 @@ export default function ForgotPassword() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/send-reset-sms', {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-reset-sms`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
         },
         body: JSON.stringify({ phone: normalizedPhone })
       });
