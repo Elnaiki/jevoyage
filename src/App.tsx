@@ -78,8 +78,16 @@ export default function App() {
               <InstallBanner />
               <Routes>
                 <Route path="/auth" element={<Auth />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
+                <Route path="/login" element={
+                  <div className="min-h-screen">
+                    <Login />
+                  </div>
+                } />
+                <Route path="/signup" element={
+                  <div className="min-h-screen">
+                    <Signup />
+                  </div>
+                } />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/verify-sms-code" element={<VerifySmsCode />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
@@ -89,7 +97,14 @@ export default function App() {
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
-              <BottomNav />
+              <Routes>
+                <Route path="/login" element={null} />
+                <Route path="/signup" element={null} />
+                <Route path="/forgot-password" element={null} />
+                <Route path="/verify-sms-code" element={null} />
+                <Route path="/reset-password" element={null} />
+                <Route path="/*" element={<BottomNav />} />
+              </Routes>
             </div>
           } />
         </Routes>
