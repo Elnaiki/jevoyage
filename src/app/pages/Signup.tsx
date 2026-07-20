@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 
 import { useAuth } from '../lib/auth';
 
-import { Bus, Eye, EyeOff, ArrowLeft, Check } from 'lucide-react';
+import { Bus, Eye, EyeOff, Facebook, ArrowLeft, Check } from 'lucide-react';
 
 
 
@@ -28,7 +28,7 @@ export default function Signup() {
 
   const [success, setSuccess] = useState(false);
 
-  const { signUp } = useAuth();
+  const { signUp, signInWithFacebook } = useAuth();
 
   const navigate = useNavigate();
 
@@ -302,6 +302,17 @@ export default function Signup() {
 
           </button>
 
+          <button
+            type="button"
+            onClick={async () => {
+              const { error } = await signInWithFacebook();
+              if (error) setError(error);
+            }}
+            className="w-full bg-blue-600 text-white py-4 rounded-2xl font-extrabold text-base hover:bg-blue-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+          >
+            <Facebook size={20} />
+            Continuer avec Facebook
+          </button>
         </form>
 
 

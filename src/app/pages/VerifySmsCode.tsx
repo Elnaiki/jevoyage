@@ -23,17 +23,20 @@ export default function VerifySmsCode() {
     setLoading(true);
 
     try {
-      // Vérifier le code dans Supabase
-      const { data: codeData, error: fetchError } = await fetch('/api/verify-sms-code', {
+      // Vérifier le code via Edge Function Supabase
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/verify-sms-code`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
         },
         body: JSON.stringify({ phone, code })
-      }).then(res => res.json());
+      });
 
-      if (fetchError || !codeData.valid) {
-        setError('Code invalide ou expiré');
+      const data = await response.json();
+
+      if (!response.ok || !data.valid) {
+        setError(data.error || 'Code invalide ou expiré');
         setLoading(false);
         return;
       }
