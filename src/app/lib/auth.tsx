@@ -10,6 +10,7 @@ interface AuthContextType {
   loading: boolean;
   signUp: (phone: string, password: string, fullName: string) => Promise<{ error: string | null }>;
   signIn: (phone: string, password: string) => Promise<{ error: string | null }>;
+  signInWithFacebook: () => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   updateProfile: (data: Partial<Profile>) => Promise<{ error: string | null }>;
 }
@@ -88,6 +89,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setProfile(null);
   };
 
+
+  const signInWithFacebook = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({ provider: 'facebook' });
+    if (error) return { error: error.message };
+    return { error: null };
+  };
+
+
   const updateProfile = async (data: Partial<Profile>) => {
     if (!profile) return { error: 'Profil non trouvé' };
 
@@ -98,13 +107,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (error) return { error: error.message };
 
-    // Mettre à jour le profil dans le contexte
+
+
     setProfile({ ...profile, ...data });
     return { error: null };
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, session, loading, signUp, signIn, signOut, updateProfile }}>
+
+
+    <AuthContext.Provider value={{ user, profile, session, loading, signUp, signIn, signInWithFacebook, signOut, updateProfile }}>
+
       {children}
     </AuthContext.Provider>
   );

@@ -21,3 +21,6 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Backend server file (not needed for frontend deployment)
+server.js
