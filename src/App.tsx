@@ -4,6 +4,9 @@ import BottomNav from './app/components/BottomNav';
 import Auth from './app/pages/Auth';
 import Login from './app/pages/Login';
 import Signup from './app/pages/Signup';
+import ForgotPassword from './app/pages/ForgotPassword';
+import VerifySmsCode from './app/pages/VerifySmsCode';
+import ResetPassword from './app/pages/ResetPassword';
 import Home from './app/pages/Home';
 import TripDetail from './app/pages/TripDetail';
 import History from './app/pages/History';
@@ -75,15 +78,33 @@ export default function App() {
               <InstallBanner />
               <Routes>
                 <Route path="/auth" element={<Auth />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
+                <Route path="/login" element={
+                  <div className="min-h-screen">
+                    <Login />
+                  </div>
+                } />
+                <Route path="/signup" element={
+                  <div className="min-h-screen">
+                    <Signup />
+                  </div>
+                } />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/verify-sms-code" element={<VerifySmsCode />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/" element={<Home />} />
                 <Route path="/trip/:id" element={<TripDetail />} />
                 <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
-              <BottomNav />
+              <Routes>
+                <Route path="/login" element={null} />
+                <Route path="/signup" element={null} />
+                <Route path="/forgot-password" element={null} />
+                <Route path="/verify-sms-code" element={null} />
+                <Route path="/reset-password" element={null} />
+                <Route path="/*" element={<BottomNav />} />
+              </Routes>
             </div>
           } />
         </Routes>
